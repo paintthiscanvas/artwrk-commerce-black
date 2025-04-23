@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,7 +93,7 @@
   }
 
   body {
-    @apply bg-art-black text-offWhite;
+    @apply bg-art-black text-art-offWhite;
     font-family: 'Inter', sans-serif;
   }
 
