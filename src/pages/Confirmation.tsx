@@ -1,24 +1,139 @@
 
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Navbar from "@/components/Navbar";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
 const Confirmation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isCancelled, setIsCancelled] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isProductSold, setIsProductSold] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // PayPal client ID
+  const PAYPAL_CLIENT_ID = "AUIhQvQYv2b9R6qUd6PpNw09tcXH8DQaX6cdPU_GL4GdMcfTQXlGSiPDY_bWN6qDe8w32AL_Yq3hSwPV";
   
   useEffect(() => {
-    // Check if the URL has a cancel parameter
+    // Check if the product has already been sold
+    const checkProductStatus = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('is_sold')
+          .eq('product_name', 'Motion Without Escape')
+          .single();
+        
+        if (error) throw error;
+        setIsProductSold(data?.is_sold || false);
+      } catch (error) {
+        console.error("Error checking product status:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to check product availability"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    // Check URL parameters for cancel status
     const params = new URLSearchParams(location.search);
     if (params.get('status') === 'cancel') {
       setIsCancelled(true);
-    } else {
-      // Auto-redirect logic would go here
-      // In a real app, we'd redirect to PayPal
-      // For now we'll just simulate it with a console message
-      console.log("Would redirect to PayPal in production");
     }
+
+    checkProductStatus();
   }, [location]);
+
+  // PayPal handlers
+  const createOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: "12.00",
+            currency_code: "USD"
+          },
+          description: "Motion Without Escape - Art Print"
+        }
+      ]
+    });
+  };
+
+  const onApprove = async (data, actions) => {
+    try {
+      // Capture the funds from the transaction
+      const details = await actions.order.capture();
+      console.log("Payment successful:", details);
+
+      // Update product status in Supabase
+      const { error } = await supabase
+        .from('products')
+        .update({ is_sold: true })
+        .eq('product_name', 'Motion Without Escape');
+
+      if (error) throw error;
+      
+      setIsCompleted(true);
+      toast({
+        title: "Payment successful",
+        description: "Thank you for your purchase!"
+      });
+    } catch (error) {
+      console.error("Error completing payment:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to complete payment"
+      });
+    }
+  };
+
+  const onCancel = () => {
+    navigate("/confirmation?status=cancel");
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-art-lightGray">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Product already sold
+  if (isProductSold && !isCompleted) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-1 container mx-auto px-4 py-8 flex items-center justify-center">
+          <div className="max-w-lg w-full text-center space-y-8">
+            <h1 className="text-2xl md:text-3xl font-light">Already Sold</h1>
+            <p className="text-art-lightGray">
+              We're sorry, but this item has already been sold.
+            </p>
+            <a 
+              href="/"
+              className="inline-block mt-4 text-white hover:text-art-lightGray"
+            >
+              Return to product page
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -26,7 +141,25 @@ const Confirmation = () => {
       
       <div className="flex-1 container mx-auto px-4 py-8 flex items-center justify-center">
         <div className="max-w-lg w-full text-center space-y-8">
-          {isCancelled ? (
+          {isCompleted ? (
+            // Payment completed
+            <>
+              <h1 className="text-2xl md:text-3xl font-light">Thank You for Your Purchase!</h1>
+              <p className="text-art-lightGray">
+                Your payment has been successfully processed. We will prepare your artwork for shipping soon.
+              </p>
+              <p className="text-art-lightGray mt-4">
+                If you have any questions, please contact us.
+              </p>
+              <a 
+                href="/"
+                className="inline-block mt-4 text-white hover:text-art-lightGray"
+              >
+                Return to product page
+              </a>
+            </>
+          ) : isCancelled ? (
+            // Payment cancelled
             <>
               <h1 className="text-2xl md:text-3xl font-light">Order Cancelled</h1>
               <p className="text-art-lightGray">
@@ -40,14 +173,23 @@ const Confirmation = () => {
               </a>
             </>
           ) : (
+            // Payment pending
             <>
-              <h1 className="text-2xl md:text-3xl font-light">Thank You</h1>
-              <p className="text-art-lightGray">
-                Please complete your payment on PayPal to finalize your order.
+              <h1 className="text-2xl md:text-3xl font-light">Complete Your Purchase</h1>
+              <p className="text-art-lightGray mb-8">
+                Please complete your payment to finalize your order.
               </p>
-              <p className="text-sm text-art-lightGray mt-8">
-                You will be redirected to PayPal shortly...
-              </p>
+              
+              <div className="mt-8">
+                <PayPalScriptProvider options={{ "client-id": PAYPAL_CLIENT_ID, currency: "USD" }}>
+                  <PayPalButtons
+                    style={{ layout: "vertical" }}
+                    createOrder={createOrder}
+                    onApprove={onApprove}
+                    onCancel={onCancel}
+                  />
+                </PayPalScriptProvider>
+              </div>
             </>
           )}
         </div>
