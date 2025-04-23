@@ -43,24 +43,28 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-pulse text-art-lightGray">Loading...</div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col space-y-8">
-      <h1 className="text-3xl md:text-4xl font-light">{product?.product_name}</h1>
+    <div className="flex flex-col space-y-8 fade-in">
+      <h1 className="text-3xl md:text-4xl font-light tracking-wider">{product?.product_name}</h1>
       
-      <div className="text-2xl">${product?.price}</div>
+      <div className="text-2xl font-light">${product?.price}</div>
       
       <div className="space-y-2">
-        <div className="text-sm text-art-lightGray">Delivery Info</div>
-        <p>Included delivery fee worldwide</p>
-        <p>Standard Shipping DHL (Tracked)</p>
+        <div className="text-sm text-art-lightGray uppercase tracking-wider">Delivery Info</div>
+        <p className="text-art-offWhite">Included delivery fee worldwide</p>
+        <p className="text-art-offWhite">Standard Shipping DHL (Tracked)</p>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-5">
         {product?.description.split('\n\n').map((paragraph: string, index: number) => (
-          <p key={index} className="text-art-offWhite leading-relaxed">
+          <p key={index} className="text-art-lightGray leading-relaxed">
             {paragraph}
           </p>
         ))}

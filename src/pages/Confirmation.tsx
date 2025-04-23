@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -103,8 +104,8 @@ const Confirmation = () => {
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-art-lightGray">Loading...</p>
+          <div className="animate-pulse text-art-lightGray">
+            Loading...
           </div>
         </div>
       </div>
@@ -117,14 +118,14 @@ const Confirmation = () => {
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <div className="flex-1 container mx-auto px-4 py-8 flex items-center justify-center">
-          <div className="max-w-lg w-full text-center space-y-8">
+          <div className="max-w-lg w-full text-center space-y-8 fade-in">
             <h1 className="text-2xl md:text-3xl font-light">Already Sold</h1>
             <p className="text-art-lightGray">
               We're sorry, but this item has already been sold.
             </p>
             <a 
               href="/"
-              className="inline-block mt-4 text-white hover:text-art-lightGray"
+              className="inline-block mt-4 text-white hover:text-art-lightGray transition-colors"
             >
               Return to product page
             </a>
@@ -139,7 +140,7 @@ const Confirmation = () => {
       <Navbar />
       
       <div className="flex-1 container mx-auto px-4 py-8 flex items-center justify-center">
-        <div className="max-w-lg w-full text-center space-y-8">
+        <div className="max-w-lg w-full text-center space-y-8 fade-in">
           {isCompleted ? (
             // Payment completed
             <>
@@ -152,7 +153,7 @@ const Confirmation = () => {
               </p>
               <a 
                 href="/"
-                className="inline-block mt-4 text-white hover:text-art-lightGray"
+                className="inline-block mt-4 text-white hover:text-art-lightGray transition-colors"
               >
                 Return to product page
               </a>
@@ -166,7 +167,7 @@ const Confirmation = () => {
               </p>
               <a 
                 href="/"
-                className="inline-block mt-4 text-white hover:text-art-lightGray"
+                className="inline-block mt-4 text-white hover:text-art-lightGray transition-colors"
               >
                 Return to product page
               </a>

@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <div className="py-6 px-4 md:px-8 flex justify-between items-center">
+    <div className="py-6 px-4 md:px-8 flex justify-between items-center fade-in">
       <a href="/" className="text-xl md:text-2xl font-light tracking-wider hover:opacity-80 transition-opacity">
         thisistheartwrk
       </a>

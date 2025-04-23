@@ -6,19 +6,19 @@
 @layer base {
   :root {
     /* Black theme by default */
-    --background: 0 0% 0%;
+    --background: 0 0% 3%;
     --foreground: 0 0% 100%;
 
-    --card: 0 0% 5%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 90%;
 
-    --popover: 0 0% 3%;
+    --popover: 0 0% 5%;
     --popover-foreground: 0 0% 90%;
 
     --primary: 0 0% 90%;
     --primary-foreground: 0 0% 5%;
 
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 90%;
 
     --muted: 0 0% 15%;
@@ -30,11 +30,11 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 90%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
+    --border: 0 0% 16%;
+    --input: 0 0% 12%;
     --ring: 0 0% 70%;
 
-    --radius: 0.5rem;
+    --radius: 0.3rem;
 
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 80%;
@@ -48,19 +48,19 @@
 
   .dark {
     /* Already using dark theme by default */
-    --background: 0 0% 0%;
+    --background: 0 0% 3%;
     --foreground: 0 0% 100%;
 
-    --card: 0 0% 5%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 90%;
 
-    --popover: 0 0% 3%;
+    --popover: 0 0% 5%;
     --popover-foreground: 0 0% 90%;
 
     --primary: 0 0% 90%;
     --primary-foreground: 0 0% 5%;
 
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 90%;
 
     --muted: 0 0% 15%;
@@ -72,8 +72,8 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 90%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
+    --border: 0 0% 16%;
+    --input: 0 0% 12%;
     --ring: 0 0% 70%;
 
     --sidebar-background: 0 0% 5%;
@@ -104,7 +104,7 @@
   
   /* Smooth transitions */
   a, button {
-    @apply transition-all duration-200;
+    @apply transition-all duration-150 ease-in-out;
   }
 }
 
@@ -117,6 +117,40 @@
   .hover-link {
     @apply relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-white 
     after:transition-all after:duration-300 hover:after:w-full;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+
+  .scale-hover {
+    @apply transition-transform duration-150 hover:scale-[1.02];
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

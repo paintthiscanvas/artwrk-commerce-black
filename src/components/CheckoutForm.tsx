@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -102,7 +103,7 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-2xl mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-2xl mx-auto fade-in">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name</Label>
@@ -113,7 +114,6 @@ const CheckoutForm = () => {
             onChange={handleChange}
             required
             autoComplete="off"
-            className="bg-secondary border-none focus-visible:ring-white"
             disabled={isSold || isLoading}
           />
         </div>
@@ -126,7 +126,6 @@ const CheckoutForm = () => {
             onChange={handleChange}
             required
             autoComplete="off"
-            className="bg-secondary border-none focus-visible:ring-white"
             disabled={isSold || isLoading}
           />
         </div>
@@ -141,7 +140,6 @@ const CheckoutForm = () => {
           onChange={handleChange}
           required
           autoComplete="off"
-          className="bg-secondary border-none focus-visible:ring-white"
           disabled={isSold || isLoading}
         />
       </div>
@@ -154,7 +152,6 @@ const CheckoutForm = () => {
           value={formData.apartment}
           onChange={handleChange}
           autoComplete="off"
-          className="bg-secondary border-none focus-visible:ring-white"
           disabled={isSold || isLoading}
         />
       </div>
@@ -169,7 +166,6 @@ const CheckoutForm = () => {
             onChange={handleChange}
             required
             autoComplete="off"
-            className="bg-secondary border-none focus-visible:ring-white"
             disabled={isSold || isLoading}
           />
         </div>
@@ -182,7 +178,6 @@ const CheckoutForm = () => {
             onChange={handleChange}
             required
             autoComplete="off"
-            className="bg-secondary border-none focus-visible:ring-white"
             disabled={isSold || isLoading}
           />
         </div>
@@ -191,7 +186,7 @@ const CheckoutForm = () => {
       <div className="space-y-2">
         <Label htmlFor="state">State</Label>
         <Select onValueChange={handleStateChange} value={formData.state} disabled={isSold || isLoading}>
-          <SelectTrigger className="bg-secondary border-none focus-visible:ring-white">
+          <SelectTrigger className="h-11 bg-secondary border-none focus-visible:ring-white rounded-md transition-all duration-150 ease-in-out">
             <SelectValue placeholder="Select State" />
           </SelectTrigger>
           <SelectContent className="bg-secondary text-white">
@@ -211,7 +206,6 @@ const CheckoutForm = () => {
           onChange={handleChange}
           required
           autoComplete="off"
-          className="bg-secondary border-none focus-visible:ring-white"
           disabled={isSold || isLoading}
         />
       </div>
@@ -226,7 +220,6 @@ const CheckoutForm = () => {
           onChange={handleChange}
           required
           autoComplete="off"
-          className="bg-secondary border-none focus-visible:ring-white"
           disabled={isSold || isLoading}
         />
       </div>
@@ -241,7 +234,6 @@ const CheckoutForm = () => {
             onChange={handleChange}
             required
             autoComplete="off"
-            className="bg-secondary border-none focus-visible:ring-white"
             disabled={isSold || isLoading}
           />
         </div>
@@ -255,7 +247,6 @@ const CheckoutForm = () => {
             onChange={handleChange}
             required
             autoComplete="off"
-            className="bg-secondary border-none focus-visible:ring-white"
             disabled={isSold || isLoading}
           />
         </div>
@@ -263,7 +254,7 @@ const CheckoutForm = () => {
 
       <Button 
         type="submit" 
-        className="w-full py-6 bg-white hover:bg-art-offWhite text-black hover:text-art-black"
+        className="w-full py-6"
         disabled={isSold || isLoading}
       >
         {isLoading ? "Processing..." : "Complete Order"}
