@@ -1,23 +1,56 @@
 
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
 interface ProductDetailsProps {
-  isSold: boolean;
+  isSold?: boolean;
 }
 
 const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
   const navigate = useNavigate();
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .single();
+        
+        if (error) throw error;
+        setProduct(data);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load product details"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, []);
+
   const handleOrder = () => {
     navigate("/checkout");
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col space-y-8">
-      <h1 className="text-3xl md:text-4xl font-light">Motion Without Escape</h1>
+      <h1 className="text-3xl md:text-4xl font-light">{product?.product_name}</h1>
       
-      <div className="text-2xl">$12</div>
+      <div className="text-2xl">${product?.price}</div>
       
       <div className="space-y-2">
         <div className="text-sm text-art-lightGray">Delivery Info</div>
@@ -26,26 +59,14 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       </div>
       
       <div className="space-y-4">
-        <p className="text-art-offWhite leading-relaxed">
-          A reflection on the threshold between motion and restraint. This piece captures 
-          the tension of something meant to move, yet held—an instinct for flight pressing 
-          against the weight of the unseen.
-        </p>
-        
-        <p className="text-art-offWhite leading-relaxed">
-          Brushstrokes stretch and clash like fractured momentum, echoing the shape of wings 
-          caught in hesitation. Texture becomes turbulence. The surface resists, as if air 
-          itself were a barrier.
-        </p>
-        
-        <p className="text-art-offWhite leading-relaxed">
-          There is no sky here, only the suggestion of it. Freedom is not denied, but delayed—hovering 
-          somewhere just beyond reach. In this space, struggle becomes form. Movement exists 
-          not in escape, but in the will to rise against what cannot be seen.
-        </p>
+        {product?.description.split('\n\n').map((paragraph: string, index: number) => (
+          <p key={index} className="text-art-offWhite leading-relaxed">
+            {paragraph}
+          </p>
+        ))}
       </div>
       
-      {isSold ? (
+      {product?.is_sold ? (
         <Button disabled className="w-full py-6 bg-art-mediumGray hover:bg-art-mediumGray text-art-lightGray cursor-not-allowed">
           Sold Out
         </Button>

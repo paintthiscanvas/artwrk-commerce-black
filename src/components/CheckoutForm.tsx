@@ -1,12 +1,12 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
-// US states for dropdown
 const US_STATES = [
   "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", 
   "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", 
@@ -19,6 +19,8 @@ const US_STATES = [
 
 const CheckoutForm = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSold, setIsSold] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -33,6 +35,28 @@ const CheckoutForm = () => {
     paypalEmail: ""
   });
 
+  useEffect(() => {
+    const checkProductStatus = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('is_sold')
+        .single();
+      
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to check product status"
+        });
+        return;
+      }
+      
+      setIsSold(data?.is_sold || false);
+    };
+
+    checkProductStatus();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -42,10 +66,39 @@ const CheckoutForm = () => {
     setFormData(prev => ({ ...prev, state: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, we would validate and process the form
-    navigate("/confirmation");
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase
+        .from('checkout_submissions')
+        .insert([{
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          street_address: formData.streetAddress,
+          apartment: formData.apartment,
+          city: formData.city,
+          state: formData.state,
+          zip_code: formData.zipCode,
+          phone_number: formData.phone,
+          email: formData.email,
+          paypal_name: formData.paypalName,
+          paypal_email: formData.paypalEmail
+        }]);
+
+      if (error) throw error;
+      
+      navigate("/confirmation");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to submit checkout information"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,7 +112,9 @@ const CheckoutForm = () => {
             value={formData.firstName}
             onChange={handleChange}
             required
+            autoComplete="off"
             className="bg-secondary border-none focus-visible:ring-white"
+            disabled={isSold || isLoading}
           />
         </div>
         <div className="space-y-2">
@@ -70,7 +125,9 @@ const CheckoutForm = () => {
             value={formData.lastName}
             onChange={handleChange}
             required
+            autoComplete="off"
             className="bg-secondary border-none focus-visible:ring-white"
+            disabled={isSold || isLoading}
           />
         </div>
       </div>
@@ -83,7 +140,9 @@ const CheckoutForm = () => {
           value={formData.streetAddress}
           onChange={handleChange}
           required
+          autoComplete="off"
           className="bg-secondary border-none focus-visible:ring-white"
+          disabled={isSold || isLoading}
         />
       </div>
 
@@ -94,35 +153,25 @@ const CheckoutForm = () => {
           name="apartment"
           value={formData.apartment}
           onChange={handleChange}
+          autoComplete="off"
           className="bg-secondary border-none focus-visible:ring-white"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="city">City</Label>
-        <Input
-          id="city"
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
-          required
-          className="bg-secondary border-none focus-visible:ring-white"
+          disabled={isSold || isLoading}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="state">State</Label>
-          <Select onValueChange={handleStateChange} value={formData.state}>
-            <SelectTrigger className="bg-secondary border-none focus-visible:ring-white">
-              <SelectValue placeholder="Select State" />
-            </SelectTrigger>
-            <SelectContent className="bg-secondary text-white">
-              {US_STATES.map(state => (
-                <SelectItem key={state} value={state}>{state}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Label htmlFor="city">City</Label>
+          <Input
+            id="city"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+            autoComplete="off"
+            className="bg-secondary border-none focus-visible:ring-white"
+            disabled={isSold || isLoading}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="zipCode">ZIP Code</Label>
@@ -132,9 +181,25 @@ const CheckoutForm = () => {
             value={formData.zipCode}
             onChange={handleChange}
             required
+            autoComplete="off"
             className="bg-secondary border-none focus-visible:ring-white"
+            disabled={isSold || isLoading}
           />
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="state">State</Label>
+        <Select onValueChange={handleStateChange} value={formData.state} disabled={isSold || isLoading}>
+          <SelectTrigger className="bg-secondary border-none focus-visible:ring-white">
+            <SelectValue placeholder="Select State" />
+          </SelectTrigger>
+          <SelectContent className="bg-secondary text-white">
+            {US_STATES.map(state => (
+              <SelectItem key={state} value={state}>{state}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
@@ -145,7 +210,9 @@ const CheckoutForm = () => {
           value={formData.phone}
           onChange={handleChange}
           required
+          autoComplete="off"
           className="bg-secondary border-none focus-visible:ring-white"
+          disabled={isSold || isLoading}
         />
       </div>
 
@@ -158,7 +225,9 @@ const CheckoutForm = () => {
           value={formData.email}
           onChange={handleChange}
           required
+          autoComplete="off"
           className="bg-secondary border-none focus-visible:ring-white"
+          disabled={isSold || isLoading}
         />
       </div>
 
@@ -171,7 +240,9 @@ const CheckoutForm = () => {
             value={formData.paypalName}
             onChange={handleChange}
             required
+            autoComplete="off"
             className="bg-secondary border-none focus-visible:ring-white"
+            disabled={isSold || isLoading}
           />
         </div>
         <div className="space-y-2">
@@ -183,13 +254,19 @@ const CheckoutForm = () => {
             value={formData.paypalEmail}
             onChange={handleChange}
             required
+            autoComplete="off"
             className="bg-secondary border-none focus-visible:ring-white"
+            disabled={isSold || isLoading}
           />
         </div>
       </div>
 
-      <Button type="submit" className="w-full py-6 bg-white hover:bg-art-offWhite text-black hover:text-art-black">
-        Complete Order
+      <Button 
+        type="submit" 
+        className="w-full py-6 bg-white hover:bg-art-offWhite text-black hover:text-art-black"
+        disabled={isSold || isLoading}
+      >
+        {isLoading ? "Processing..." : "Complete Order"}
       </Button>
     </form>
   );

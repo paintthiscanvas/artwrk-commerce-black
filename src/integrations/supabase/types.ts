@@ -9,7 +9,81 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      checkout_submissions: {
+        Row: {
+          apartment: string | null
+          city: string
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          paypal_email: string
+          paypal_name: string
+          phone_number: string
+          state: string
+          street_address: string
+          zip_code: string
+        }
+        Insert: {
+          apartment?: string | null
+          city: string
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          paypal_email: string
+          paypal_name: string
+          phone_number: string
+          state: string
+          street_address: string
+          zip_code: string
+        }
+        Update: {
+          apartment?: string | null
+          city?: string
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          paypal_email?: string
+          paypal_name?: string
+          phone_number?: string
+          state?: string
+          street_address?: string
+          zip_code?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_sold: boolean | null
+          price: number
+          product_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_sold?: boolean | null
+          price: number
+          product_name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_sold?: boolean | null
+          price?: number
+          product_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

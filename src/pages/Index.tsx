@@ -1,13 +1,9 @@
 
-import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import ProductImage from "@/components/ProductImage";
 import ProductDetails from "@/components/ProductDetails";
 
 const Index = () => {
-  // We can toggle this to demonstrate both states
-  const [isSold, setIsSold] = useState(false);
-  
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -22,7 +18,7 @@ const Index = () => {
           </div>
           
           <div>
-            <ProductDetails isSold={isSold} />
+            <ProductDetails />
           </div>
         </div>
       </div>
