@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -181,7 +180,7 @@ const Confirmation = () => {
               </p>
               
               <div className="mt-8">
-                <PayPalScriptProvider options={{ "client-id": PAYPAL_CLIENT_ID, currency: "USD" }}>
+                <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID, currency: "USD" }}>
                   <PayPalButtons
                     style={{ layout: "vertical" }}
                     createOrder={createOrder}
