@@ -57,7 +57,7 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       
       <div className="space-y-2">
         <div className="text-xs tracking-wider text-art-lightGray">INCLUDED DELIVERY FEE WORLDWIDE</div>
-        <p className="text-art-offWhite">Standard Shipping DHL (Tracked)</p>
+        <p className="text-art-offWhite">Standard Shipping (DHL Tracked)</p>
       </div>
       
       <div className="space-y-5">
