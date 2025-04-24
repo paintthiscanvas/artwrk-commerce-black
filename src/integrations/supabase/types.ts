@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           apartment: string | null
           city: string
+          country: string
           created_at: string | null
           email: string
           first_name: string
@@ -28,6 +29,7 @@ export type Database = {
         Insert: {
           apartment?: string | null
           city: string
+          country?: string
           created_at?: string | null
           email: string
           first_name: string
@@ -43,6 +45,7 @@ export type Database = {
         Update: {
           apartment?: string | null
           city?: string
+          country?: string
           created_at?: string | null
           email?: string
           first_name?: string

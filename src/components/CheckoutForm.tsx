@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,16 @@ const US_STATES = [
   "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
 ];
 
+const COUNTRIES = [
+  "United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Japan", 
+  "South Korea", "China", "India", "Brazil", "Mexico", "Spain", "Italy", "Netherlands", 
+  "Sweden", "Norway", "Denmark", "Finland", "Singapore", "New Zealand", "Ireland", 
+  "Switzerland", "Austria", "Belgium", "Portugal", "Greece", "Poland", "Russia", 
+  "South Africa", "Argentina", "Chile", "Colombia", "Peru", "Indonesia", "Malaysia", 
+  "Thailand", "Vietnam", "Philippines", "Turkey", "Israel", "Saudi Arabia", "UAE", 
+  "Other"
+];
+
 const CheckoutForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +38,7 @@ const CheckoutForm = () => {
     apartment: "",
     city: "",
     state: "",
+    country: "",
     zipCode: "",
     phone: "",
     email: "",
@@ -67,6 +77,10 @@ const CheckoutForm = () => {
     setFormData(prev => ({ ...prev, state: value }));
   };
 
+  const handleCountryChange = (value: string) => {
+    setFormData(prev => ({ ...prev, country: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -81,6 +95,7 @@ const CheckoutForm = () => {
           apartment: formData.apartment,
           city: formData.city,
           state: formData.state,
+          country: formData.country,
           zip_code: formData.zipCode,
           phone_number: formData.phone,
           email: formData.email,
@@ -170,6 +185,35 @@ const CheckoutForm = () => {
           />
         </div>
         <div className="space-y-2">
+          <Label htmlFor="country">Country</Label>
+          <Select onValueChange={handleCountryChange} value={formData.country} disabled={isSold || isLoading}>
+            <SelectTrigger className="h-11 bg-secondary border-none focus-visible:ring-white rounded-md transition-all duration-150 ease-in-out">
+              <SelectValue placeholder="Select Country" />
+            </SelectTrigger>
+            <SelectContent className="bg-secondary text-white">
+              {COUNTRIES.map(country => (
+                <SelectItem key={country} value={country}>{country}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="state">State</Label>
+          <Select onValueChange={handleStateChange} value={formData.state} disabled={isSold || isLoading}>
+            <SelectTrigger className="h-11 bg-secondary border-none focus-visible:ring-white rounded-md transition-all duration-150 ease-in-out">
+              <SelectValue placeholder="Select State" />
+            </SelectTrigger>
+            <SelectContent className="bg-secondary text-white">
+              {US_STATES.map(state => (
+                <SelectItem key={state} value={state}>{state}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
           <Label htmlFor="zipCode">ZIP Code</Label>
           <Input
             id="zipCode"
@@ -181,20 +225,6 @@ const CheckoutForm = () => {
             disabled={isSold || isLoading}
           />
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="state">State</Label>
-        <Select onValueChange={handleStateChange} value={formData.state} disabled={isSold || isLoading}>
-          <SelectTrigger className="h-11 bg-secondary border-none focus-visible:ring-white rounded-md transition-all duration-150 ease-in-out">
-            <SelectValue placeholder="Select State" />
-          </SelectTrigger>
-          <SelectContent className="bg-secondary text-white">
-            {US_STATES.map(state => (
-              <SelectItem key={state} value={state}>{state}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="space-y-2">
