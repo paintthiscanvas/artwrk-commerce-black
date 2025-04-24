@@ -3,29 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
-
-const US_STATES = [
-  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", 
-  "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", 
-  "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", 
-  "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", 
-  "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", 
-  "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", 
-  "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
-];
-
-const COUNTRIES = [
-  "United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Japan", 
-  "South Korea", "China", "India", "Brazil", "Mexico", "Spain", "Italy", "Netherlands", 
-  "Sweden", "Norway", "Denmark", "Finland", "Singapore", "New Zealand", "Ireland", 
-  "Switzerland", "Austria", "Belgium", "Portugal", "Greece", "Poland", "Russia", 
-  "South Africa", "Argentina", "Chile", "Colombia", "Peru", "Indonesia", "Malaysia", 
-  "Thailand", "Vietnam", "Philippines", "Turkey", "Israel", "Saudi Arabia", "UAE", 
-  "Other"
-];
+import CountryRegionSelect from "./CountryRegionSelect";
 
 const CheckoutForm = () => {
   const navigate = useNavigate();
@@ -73,12 +53,16 @@ const CheckoutForm = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleStateChange = (value: string) => {
-    setFormData(prev => ({ ...prev, state: value }));
+  const handleCountryChange = (value: string) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      country: value,
+      state: "" // Reset state when country changes
+    }));
   };
 
-  const handleCountryChange = (value: string) => {
-    setFormData(prev => ({ ...prev, country: value }));
+  const handleStateChange = (value: string) => {
+    setFormData(prev => ({ ...prev, state: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -171,60 +155,38 @@ const CheckoutForm = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="city">City</Label>
-          <Input
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            required
-            autoComplete="off"
-            disabled={isSold || isLoading}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="country">Country</Label>
-          <Select onValueChange={handleCountryChange} value={formData.country} disabled={isSold || isLoading}>
-            <SelectTrigger className="h-11 bg-secondary border-none focus-visible:ring-white rounded-md transition-all duration-150 ease-in-out">
-              <SelectValue placeholder="Select Country" />
-            </SelectTrigger>
-            <SelectContent className="bg-secondary text-white">
-              {COUNTRIES.map(country => (
-                <SelectItem key={country} value={country}>{country}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="city">City</Label>
+        <Input
+          id="city"
+          name="city"
+          value={formData.city}
+          onChange={handleChange}
+          required
+          autoComplete="off"
+          disabled={isSold || isLoading}
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="state">State</Label>
-          <Select onValueChange={handleStateChange} value={formData.state} disabled={isSold || isLoading}>
-            <SelectTrigger className="h-11 bg-secondary border-none focus-visible:ring-white rounded-md transition-all duration-150 ease-in-out">
-              <SelectValue placeholder="Select State" />
-            </SelectTrigger>
-            <SelectContent className="bg-secondary text-white">
-              {US_STATES.map(state => (
-                <SelectItem key={state} value={state}>{state}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="zipCode">ZIP Code</Label>
-          <Input
-            id="zipCode"
-            name="zipCode"
-            value={formData.zipCode}
-            onChange={handleChange}
-            required
-            autoComplete="off"
-            disabled={isSold || isLoading}
-          />
-        </div>
+      <CountryRegionSelect
+        country={formData.country}
+        region={formData.state}
+        onCountryChange={handleCountryChange}
+        onRegionChange={handleStateChange}
+        isDisabled={isSold || isLoading}
+      />
+
+      <div className="space-y-2">
+        <Label htmlFor="zipCode">ZIP Code</Label>
+        <Input
+          id="zipCode"
+          name="zipCode"
+          value={formData.zipCode}
+          onChange={handleChange}
+          required
+          autoComplete="off"
+          disabled={isSold || isLoading}
+        />
       </div>
 
       <div className="space-y-2">
