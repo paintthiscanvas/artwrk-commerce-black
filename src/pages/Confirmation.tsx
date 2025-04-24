@@ -13,22 +13,24 @@ const Confirmation = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isProductSold, setIsProductSold] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [productPrice, setProductPrice] = useState<number | null>(null);
   
   // PayPal client ID
   const PAYPAL_CLIENT_ID = "AUIhQvQYv2b9R6qUd6PpNw09tcXH8DQaX6cdPU_GL4GdMcfTQXlGSiPDY_bWN6qDe8w32AL_Yq3hSwPV";
   
   useEffect(() => {
-    // Check if the product has already been sold
+    // Check if the product has already been sold and get its price
     const checkProductStatus = async () => {
       try {
         const { data, error } = await supabase
           .from('products')
-          .select('is_sold')
+          .select('is_sold, price')
           .eq('product_name', 'Motion Without Escape')
           .single();
         
         if (error) throw error;
         setIsProductSold(data?.is_sold || false);
+        setProductPrice(data?.price || null);
       } catch (error) {
         console.error("Error checking product status:", error);
         toast({
@@ -52,11 +54,20 @@ const Confirmation = () => {
 
   // PayPal handlers
   const createOrder = (data, actions) => {
+    if (!productPrice) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Product price not available"
+      });
+      return;
+    }
+
     return actions.order.create({
       purchase_units: [
         {
           amount: {
-            value: "12.00",
+            value: productPrice.toString(),
             currency_code: "USD"
           },
           description: "Motion Without Escape - Art Print"
@@ -99,7 +110,7 @@ const Confirmation = () => {
   };
 
   // Loading state
-  if (isLoading) {
+  if (isLoading || !productPrice) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />

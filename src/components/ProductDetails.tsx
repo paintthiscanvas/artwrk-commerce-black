@@ -53,11 +53,11 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
     <div className="flex flex-col space-y-8 fade-in">
       <h1 className="text-3xl md:text-4xl font-light tracking-wider">{product?.product_name}</h1>
       
-      <div className="text-2xl font-light">${product?.price}</div>
+      <div className="text-2xl font-light">${product?.price?.toLocaleString()}</div>
       
       <div className="space-y-2">
         <div className="text-xs tracking-wider text-art-lightGray">INCLUDED DELIVERY FEE WORLDWIDE</div>
-        <p className="text-art-offWhite">Standard Shipping DHL (Tracked)</p>
+        <p className="text-art-offWhite">Standard Shipping (DHL Tracked)</p>
       </div>
       
       <div className="space-y-5">
