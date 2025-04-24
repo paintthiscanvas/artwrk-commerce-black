@@ -32,9 +32,10 @@ const ImageModal = ({ imageUrl, isOpen, onClose }: ImageModalProps) => {
 
   return (
     <div 
-      className={`fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 bg-black/95 flex items-center justify-center transition-all duration-300 backdrop-blur-sm ${
         animateIn ? 'opacity-100' : 'opacity-0'
       }`}
+      onClick={onClose}
     >
       <button 
         className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors"
@@ -44,11 +45,16 @@ const ImageModal = ({ imageUrl, isOpen, onClose }: ImageModalProps) => {
         <X className="h-8 w-8" />
       </button>
       
-      <div className="w-[90%] h-[90%] flex items-center justify-center">
+      <div 
+        className="w-[90%] h-[90%] flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
         <img 
           src={imageUrl} 
           alt="Full size artwork" 
-          className="max-w-full max-h-full object-contain" 
+          className={`max-w-full max-h-full object-contain transition-all duration-300 ${
+            animateIn ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          }`}
         />
       </div>
     </div>
