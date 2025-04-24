@@ -56,7 +56,7 @@ const Confirmation = () => {
       purchase_units: [
         {
           amount: {
-            value: "90000.00",  // Updated price
+            value: "12.00",
             currency_code: "USD"
           },
           description: "Motion Without Escape - Art Print"
