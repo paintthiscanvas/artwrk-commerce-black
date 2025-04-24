@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -57,8 +56,7 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       <div className="text-2xl font-light">${product?.price}</div>
       
       <div className="space-y-2">
-        <div className="text-sm text-art-lightGray uppercase tracking-wider">Delivery Info</div>
-        <p className="text-art-offWhite">Included delivery fee worldwide</p>
+        <div className="text-xs tracking-wider text-art-lightGray">INCLUDED DELIVERY FEE WORLDWIDE</div>
         <p className="text-art-offWhite">Standard Shipping DHL (Tracked)</p>
       </div>
       
@@ -71,11 +69,11 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       </div>
       
       {product?.is_sold ? (
-        <Button disabled className="w-full py-6 bg-art-mediumGray hover:bg-art-mediumGray text-art-lightGray cursor-not-allowed">
+        <Button disabled variant="outline" className="w-full py-6 cursor-not-allowed opacity-50">
           Sold Out
         </Button>
       ) : (
-        <Button onClick={handleOrder} className="w-full py-6 bg-white hover:bg-art-offWhite text-black hover:text-art-black">
+        <Button onClick={handleOrder} className="w-full py-6">
           Order Now (10–14 days)
         </Button>
       )}
