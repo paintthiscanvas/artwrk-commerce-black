@@ -56,6 +56,16 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       <div className="text-2xl font-light">${product?.price?.toLocaleString()}</div>
       
       <div className="space-y-2">
+        <div className="text-xs tracking-wider text-art-lightGray">SIZE</div>
+        <p className="text-art-offWhite text-sm">66 cm x 3 cm x 36 cm</p>
+      </div>
+
+      <div className="space-y-2">
+        <div className="text-xs tracking-wider text-art-lightGray">MATERIALS</div>
+        <p className="text-art-offWhite text-sm">Acrylic on canvas</p>
+      </div>
+      
+      <div className="space-y-2">
         <div className="text-xs tracking-wider text-art-lightGray">INCLUDED DELIVERY FEE WORLDWIDE</div>
         <p className="text-art-offWhite">Standard Shipping (DHL Tracked)</p>
       </div>
