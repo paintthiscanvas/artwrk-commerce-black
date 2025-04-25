@@ -79,7 +79,7 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       
       <div className="space-y-5">
         <p className="text-art-lightGray leading-relaxed">
-          Amid darkness, light cuts through — not as clarity, but as disruption. "Fragmented Silence" explores the tension between stillness and movement, peace and chaos.
+          Amid darkness, light cuts through — not as clarity, but as another sign. "Fragmented Silence" explores the tension between stillness and movement, peace and chaos.
         </p>
         <p className="text-art-lightGray leading-relaxed">
           Created without formal training, this piece is raw, instinctive, and unfiltered. It is not an homage to tradition, but a confrontation with it.
