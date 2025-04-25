@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
         const { data, error } = await supabase
           .from('products')
           .select('*')
+          .eq('product_name', 'Motion Without Escape')
           .single();
         
         if (error) throw error;

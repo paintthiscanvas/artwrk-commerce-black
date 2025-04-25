@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -15,11 +14,9 @@ const Confirmation = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [productPrice, setProductPrice] = useState<number | null>(null);
   
-  // PayPal client ID
   const PAYPAL_CLIENT_ID = "AUIhQvQYv2b9R6qUd6PpNw09tcXH8DQaX6cdPU_GL4GdMcfTQXlGSiPDY_bWN6qDe8w32AL_Yq3hSwPV";
   
   useEffect(() => {
-    // Check if the product has already been sold and get its price
     const checkProductStatus = async () => {
       try {
         const { data, error } = await supabase
@@ -43,7 +40,6 @@ const Confirmation = () => {
       }
     };
     
-    // Check URL parameters for cancel status
     const params = new URLSearchParams(location.search);
     if (params.get('status') === 'cancel') {
       setIsCancelled(true);
@@ -52,7 +48,6 @@ const Confirmation = () => {
     checkProductStatus();
   }, [location]);
 
-  // PayPal handlers
   const createOrder = (data, actions) => {
     if (!productPrice) {
       toast({
@@ -78,11 +73,9 @@ const Confirmation = () => {
 
   const onApprove = async (data, actions) => {
     try {
-      // Capture the funds from the transaction
       const details = await actions.order.capture();
       console.log("Payment successful:", details);
 
-      // Update product status in Supabase
       const { error } = await supabase
         .from('products')
         .update({ is_sold: true })
@@ -109,7 +102,6 @@ const Confirmation = () => {
     navigate("/confirmation?status=cancel");
   };
 
-  // Loading state
   if (isLoading || !productPrice) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -123,7 +115,6 @@ const Confirmation = () => {
     );
   }
 
-  // Product already sold
   if (isProductSold && !isCompleted) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -153,7 +144,6 @@ const Confirmation = () => {
       <div className="flex-1 container mx-auto px-4 py-8 flex items-center justify-center">
         <div className="max-w-lg w-full text-center space-y-8 fade-in">
           {isCompleted ? (
-            // Payment completed
             <>
               <h1 className="text-2xl md:text-3xl font-light">Thank You for Your Purchase!</h1>
               <p className="text-art-lightGray">
@@ -170,7 +160,6 @@ const Confirmation = () => {
               </a>
             </>
           ) : isCancelled ? (
-            // Payment cancelled
             <>
               <h1 className="text-2xl md:text-3xl font-light">Order Cancelled</h1>
               <p className="text-art-lightGray">
@@ -184,7 +173,6 @@ const Confirmation = () => {
               </a>
             </>
           ) : (
-            // Payment pending
             <>
               <h1 className="text-2xl md:text-3xl font-light">Complete Your Purchase</h1>
               <p className="text-art-lightGray mb-8">
