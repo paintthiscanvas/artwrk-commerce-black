@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,11 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       <div className="text-2xl font-light">${product?.price?.toLocaleString()}</div>
       
       <div className="space-y-2">
+        <div className="text-xs tracking-wider text-art-lightGray">YEAR</div>
+        <p className="text-art-offWhite text-sm">2025</p>
+      </div>
+
+      <div className="space-y-2">
         <div className="text-xs tracking-wider text-art-lightGray">SIZE</div>
         <p className="text-art-offWhite text-sm">66 cm x 3 cm x 36 cm</p>
       </div>
@@ -71,11 +77,15 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
       </div>
       
       <div className="space-y-5">
-        {product?.description.split('\n\n').map((paragraph: string, index: number) => (
-          <p key={index} className="text-art-lightGray leading-relaxed">
-            {paragraph}
-          </p>
-        ))}
+        <p className="text-art-lightGray leading-relaxed">
+          Amid darkness, light cuts through — not as clarity, but as disruption. "Fragmented Silence" explores the tension between stillness and movement, peace and chaos.
+        </p>
+        <p className="text-art-lightGray leading-relaxed">
+          Created without formal training, this piece is raw, instinctive, and unfiltered. It is not an homage to tradition, but a confrontation with it.
+        </p>
+        <p className="text-sm italic text-art-lightGray opacity-75">
+          *Certificate of authenticity included. Private inquiries welcome.*
+        </p>
       </div>
       
       {product?.is_sold ? (
