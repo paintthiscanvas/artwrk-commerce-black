@@ -1,33 +1,8 @@
 
 import Navbar from "@/components/Navbar";
 import CheckoutForm from "@/components/CheckoutForm";
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { PRODUCT_ID } from "@/utils/productConfig";
 
 const Checkout = () => {
-  const [productName, setProductName] = useState("Motion Without Escape");
-
-  useEffect(() => {
-    const fetchProductName = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('product_name')
-          .eq('id', PRODUCT_ID)
-          .single();
-        
-        if (data?.product_name) {
-          setProductName(data.product_name);
-        }
-      } catch (error) {
-        console.error("Error fetching product name:", error);
-      }
-    };
-
-    fetchProductName();
-  }, []);
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -42,7 +17,7 @@ const Checkout = () => {
           </div>
           
           <h1 className="text-2xl md:text-3xl font-light mb-10 fade-in" style={{animationDelay: "0.05s"}}>
-            Checkout: {productName}
+            Checkout: Motion Without Escape
           </h1>
           
           <div className="bg-[#1C1C1C] rounded-2xl p-6 md:p-8 border border-white/5 shadow-lg fade-in" style={{animationDelay: "0.1s"}}>

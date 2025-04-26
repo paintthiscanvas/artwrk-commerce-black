@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
-import { PRODUCT_ID } from "@/utils/productConfig";
 
 interface ProductDetailsProps {
   isSold?: boolean;
@@ -21,13 +19,12 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
         const { data, error } = await supabase
           .from('products')
           .select('*')
-          .eq('id', PRODUCT_ID)
+          .eq('product_name', 'Motion Without Escape')
           .single();
         
         if (error) throw error;
         setProduct(data);
       } catch (error) {
-        console.error("Error fetching product:", error);
         toast({
           variant: "destructive",
           title: "Error",
