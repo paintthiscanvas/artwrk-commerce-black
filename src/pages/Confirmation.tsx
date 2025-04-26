@@ -65,7 +65,7 @@ const Confirmation = () => {
             value: productPrice.toString(),
             currency_code: "USD"
           },
-          description: "Motion Without Escape - Art Print"
+          description: "Motion Without Escape (So Fragmented Silence) - Art Print"
         }
       ]
     });

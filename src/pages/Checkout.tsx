@@ -17,7 +17,7 @@ const Checkout = () => {
           </div>
           
           <h1 className="text-2xl md:text-3xl font-light mb-10 fade-in" style={{animationDelay: "0.05s"}}>
-            Checkout: Motion Without Escape
+            Checkout: Motion Without Escape (So Fragmented Silence)
           </h1>
           
           <div className="bg-[#1C1C1C] rounded-2xl p-6 md:p-8 border border-white/5 shadow-lg fade-in" style={{animationDelay: "0.1s"}}>
