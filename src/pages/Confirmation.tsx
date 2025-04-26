@@ -4,6 +4,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
+import { PRODUCT_ID } from "@/utils/productConfig";
 
 const Confirmation = () => {
   const location = useLocation();
@@ -13,6 +14,7 @@ const Confirmation = () => {
   const [isProductSold, setIsProductSold] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [productPrice, setProductPrice] = useState<number | null>(null);
+  const [productName, setProductName] = useState<string>("");
   
   const PAYPAL_CLIENT_ID = "AUIhQvQYv2b9R6qUd6PpNw09tcXH8DQaX6cdPU_GL4GdMcfTQXlGSiPDY_bWN6qDe8w32AL_Yq3hSwPV";
   
@@ -21,13 +23,14 @@ const Confirmation = () => {
       try {
         const { data, error } = await supabase
           .from('products')
-          .select('is_sold, price')
-          .eq('product_name', 'Motion Without Escape')
+          .select('is_sold, price, product_name')
+          .eq('id', PRODUCT_ID)
           .single();
         
         if (error) throw error;
         setIsProductSold(data?.is_sold || false);
         setProductPrice(data?.price || null);
+        setProductName(data?.product_name || "");
       } catch (error) {
         console.error("Error checking product status:", error);
         toast({
@@ -65,7 +68,7 @@ const Confirmation = () => {
             value: productPrice.toString(),
             currency_code: "USD"
           },
-          description: "Motion Without Escape (So Fragmented Silence) - Art Print"
+          description: `${productName} - Art Print`
         }
       ]
     });
@@ -79,7 +82,7 @@ const Confirmation = () => {
       const { error } = await supabase
         .from('products')
         .update({ is_sold: true })
-        .eq('product_name', 'Motion Without Escape');
+        .eq('id', PRODUCT_ID);
 
       if (error) throw error;
       
