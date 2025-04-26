@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -55,7 +54,12 @@ const ProductDetails = ({ isSold = false }: ProductDetailsProps) => {
     <div className="flex flex-col space-y-8 fade-in">
       <h1 className="text-3xl md:text-4xl font-light tracking-wider">{product?.product_name}</h1>
       
-      <div className="text-2xl font-light">${product?.price?.toLocaleString()}</div>
+      <div className="text-2xl font-light">
+        ${product?.price?.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        })}
+      </div>
       
       <div className="space-y-2">
         <div className="text-xs tracking-wider text-art-lightGray">YEAR</div>
