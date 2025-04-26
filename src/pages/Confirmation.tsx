@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -14,7 +15,7 @@ const Confirmation = () => {
   const [isProductSold, setIsProductSold] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [productPrice, setProductPrice] = useState<number | null>(null);
-  const [productName, setProductName] = useState<string>("");
+  const [productName, setProductName] = useState<string>("Motion Without Escape");
   
   const PAYPAL_CLIENT_ID = "AUIhQvQYv2b9R6qUd6PpNw09tcXH8DQaX6cdPU_GL4GdMcfTQXlGSiPDY_bWN6qDe8w32AL_Yq3hSwPV";
   
@@ -30,7 +31,7 @@ const Confirmation = () => {
         if (error) throw error;
         setIsProductSold(data?.is_sold || false);
         setProductPrice(data?.price || null);
-        setProductName(data?.product_name || "");
+        setProductName(data?.product_name || "Motion Without Escape");
       } catch (error) {
         console.error("Error checking product status:", error);
         toast({
